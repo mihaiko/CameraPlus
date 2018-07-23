@@ -8,7 +8,7 @@ namespace CameraPlus
 	public class CameraMoverPointer : VRPointer
 	{
 		private Transform _grabbedCamera;
-		private VRController _grabbingController;
+		public static VRController _grabbingController;
 		private Vector3 _grabPos;
 		private Quaternion _grabRot;
 		private Vector3 _realPos;
@@ -34,7 +34,6 @@ namespace CameraPlus
 				}
 
 			if (_grabbingController == null || !(_grabbingController.triggerValue <= 0.9f)) return;
-			if (_grabbingController == null) return;
 			SaveToIni();
 			_grabbingController = null;
 		}
@@ -55,29 +54,23 @@ namespace CameraPlus
 				}
 				_realPos = _grabbingController.transform.TransformPoint(_grabPos);
 				_realRot = _grabbingController.transform.rotation * _grabRot;
-			}
+            }
 
-			_grabbedCamera.position = Vector3.Lerp(_grabbedCamera.position, _realPos,
-				CameraPlusBehaviour.PosSmooth * Time.deltaTime);
-			_grabbedCamera.rotation = Quaternion.Slerp(_grabbedCamera.rotation, _realRot,
-				CameraPlusBehaviour.RotSmooth * Time.deltaTime);
-
-			CameraPlusBehaviour.ThirdPersonPos = _grabbedCamera.position;
-			CameraPlusBehaviour.ThirdPersonRot = _grabbedCamera.rotation;
-		}
+            _grabbedCamera.position = _realPos;
+        }           
 
 		private void SaveToIni()
 		{
 			var ini = Plugin.Ini;
 			var pos = _grabbedCamera.position;
-			var rot = _grabbedCamera.rotation;
-			ini.WriteValue("posx", pos.x.ToString(CultureInfo.InvariantCulture));
-			ini.WriteValue("posy", pos.y.ToString(CultureInfo.InvariantCulture));
-			ini.WriteValue("posz", pos.z.ToString(CultureInfo.InvariantCulture));
-			ini.WriteValue("rotx", rot.x.ToString(CultureInfo.InvariantCulture));
-			ini.WriteValue("roty", rot.y.ToString(CultureInfo.InvariantCulture));
-			ini.WriteValue("rotz", rot.z.ToString(CultureInfo.InvariantCulture));
-			ini.WriteValue("rotw", rot.w.ToString(CultureInfo.InvariantCulture));
-		}
+
+            CameraPlusBehaviour.m_3rdPersonCameraLateralFar  = pos.x;
+            CameraPlusBehaviour.m_3rdPersonCameraUpperHeight = pos.y;
+            CameraPlusBehaviour.m_3rdPersonCameraDistance    = -pos.z;
+
+            ini.WriteValue("3rdPersonCameraLateralFar", pos.x.ToString(CultureInfo.InvariantCulture));
+            ini.WriteValue("3rdPersonCameraUpperHeight", pos.y.ToString(CultureInfo.InvariantCulture));
+            ini.WriteValue("3rdPersonCameraDistance", (-pos.z).ToString(CultureInfo.InvariantCulture));
+        }
 	}
 }

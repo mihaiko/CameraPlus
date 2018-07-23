@@ -10,38 +10,37 @@ namespace CameraPlus
 {
 	public class Plugin : IPlugin
 	{
-		public static readonly Ini Ini = new Ini(Path.Combine(Environment.CurrentDirectory, "cameraplus.cfg"));
+		public static readonly Ini Ini = new Ini(Path.Combine(Environment.CurrentDirectory, "DynamicCamera.cfg"));
 		private CameraPlusBehaviour _cameraPlus;
 		private bool _init;
 		private FileSystemWatcher _iniWatcher;
 
-		public string Name => "CameraPlus";
+		public string Name => "DynamicCamera";
 
-		public string Version => "v1.2";
+		public string Version => "v1.1";
 
 		public void OnApplicationStart()
 		{
 			if (_init) return;
 			_init = true;
 			SceneManager.activeSceneChanged += SceneManagerOnActiveSceneChanged;
-			if (!File.Exists(Path.Combine(Environment.CurrentDirectory, "cameraplus.cfg")) || Ini.GetFullText().Contains(','))
+			if (!File.Exists(Path.Combine(Environment.CurrentDirectory, "DynamicCamera.cfg")) || Ini.GetFullText().Contains(','))
 			{
 				Ini.WriteValue("fov", "90.0");
 				Ini.WriteValue("positionSmooth", "10");
 				Ini.WriteValue("rotationSmooth", "5");
 
-				Ini.WriteValue("thirdPerson", "False");
-				
-				Ini.WriteValue("posx", "0");
-				Ini.WriteValue("posy", "2");
-				Ini.WriteValue("posz", "-1.2");
+				Ini.WriteValue("thirdPerson", "True");
 
-				Ini.WriteValue("rotx", "-0.2");
-				Ini.WriteValue("roty", "0");
-				Ini.WriteValue("rotz", "0");
-				Ini.WriteValue("rotw", "-1");
+                Ini.WriteValue("3rdPersonCameraDistance", "0.8");
+                Ini.WriteValue("3rdPersonCameraUpperHeight", "1.6");
+                Ini.WriteValue("3rdPersonCameraLowerHeight", "0.4");
+                Ini.WriteValue("3rdPersonCameraLateralNear", "0.4");
+                Ini.WriteValue("3rdPersonCameraLateralFar", "1");
+                Ini.WriteValue("3rdPersonCameraForwardPrediction", "1");
+                Ini.WriteValue("3rdPersonCameraSpeed", "6");
 
-				Ini.Save();
+                Ini.Save();
 			}
 			else
 			{
@@ -55,8 +54,8 @@ namespace CameraPlus
 			_iniWatcher = new FileSystemWatcher(Environment.CurrentDirectory)
 			{
 				NotifyFilter = NotifyFilters.LastWrite,
-				Filter = "cameraplus.cfg",
-				EnableRaisingEvents = true
+                Filter = "DynamicCamera.cfg",
+                EnableRaisingEvents = true
 			};
 			_iniWatcher.Changed += IniWatcherOnChanged;
 		}
