@@ -1,19 +1,17 @@
 # Dynamic Camera
-Beat Saber plugin based on the original CameraPlus.
+Beat Saber plugin based on the original CameraPlus. 
 While in 3rd person, the camera will automatically avoid the incoming walls in order to keep the player/avatar in sight.
 
-!! Please keep in mind that this is a replacement for the CameraPlus plugin!
-!! It will not work with both plugins installed!
+!! Please keep in mind that this is a replacement for the CameraPlus plugin! 
+!! It will not work with both plugins installed! 
 
 [Trailer](https://www.youtube.com/watch?v=y0fMcUkKPFE)
 
-# Installing
 Use the mod installer: https://github.com/Umbranoxio/BeatSaberModInstaller/releases
-	It is the easiest method, it will do all these steps below in 1 click.
 
 Press <kbd>F1</kbd> to toggle between first and third person.
 
-After you run the game once, a `DynamicCamera.cfg` file is created within the Beat Saber folder.
+After you run the game once, a `DynamicCamera.cfg` file is created within the Beat Saber folder. 
 Edit that file to configure the plugin:
 
 //SETTINGS TBD
