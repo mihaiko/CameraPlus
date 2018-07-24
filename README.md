@@ -2,8 +2,8 @@
 Beat Saber plugin based on the original CameraPlus.  
 While in 3rd person, the camera will automatically avoid the incoming walls in order to keep the player/avatar in sight.
 
-**__!!__ Please keep in mind that this is a replacement for the CameraPlus plugin!  
-__!!__ It will not work with both plugins installed! **
+**__!!__ Please keep in mind that this is a replacement for the CameraPlus plugin!**  
+**__!!__ It will not work with both plugins installed!**  
 
 ### Watch it in action [HERE](https://www.youtube.com/watch?v=y0fMcUkKPFE)!
 
