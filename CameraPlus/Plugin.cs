@@ -17,7 +17,7 @@ namespace CameraPlus
 
 		public string Name => "DynamicCamera";
 
-		public string Version => "v1.1";
+		public string Version => "v1.2";
 
 		public void OnApplicationStart()
 		{
@@ -31,6 +31,8 @@ namespace CameraPlus
 				Ini.WriteValue("rotationSmooth", "5");
 
 				Ini.WriteValue("thirdPerson", "True");
+                Ini.WriteValue("cameraPreview", "True");
+                Ini.WriteValue("moveCameraInGame", "True");
 
                 Ini.WriteValue("3rdPersonCameraDistance", "0.8");
                 Ini.WriteValue("3rdPersonCameraUpperHeight", "1.6");
@@ -44,11 +46,23 @@ namespace CameraPlus
 			}
 			else
 			{
+                bool needSave = false;
 				if (Ini.GetValue("thirdPerson", "", "missing") == "missing")
 				{
-					Ini.WriteValue("thirdPerson", "False");
-					Ini.Save();
+					Ini.WriteValue("thirdPerson", "True");
+                    needSave = true;
 				}
+                if (Ini.GetValue("cameraPreview", "", "missing") == "missing")
+                {
+                    Ini.WriteValue("cameraPreview", "True");
+                    Ini.WriteValue("moveCameraInGame", "True");
+                    needSave = true;
+                }
+
+                if (needSave)
+                {
+                    Ini.Save();
+                }
 			}
 
 			_iniWatcher = new FileSystemWatcher(Environment.CurrentDirectory)

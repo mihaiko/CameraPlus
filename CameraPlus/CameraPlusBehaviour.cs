@@ -23,8 +23,10 @@ namespace CameraPlus
 				_cameraCube.gameObject.SetActive(_thirdPerson);
 			}
 		}
+        public static bool m_MoveCameraInGame = true;
+        public static bool m_UsePreviewCamera = true;
 
-		private static bool _thirdPerson;
+        private static bool _thirdPerson;
 		private static RenderTexture _renderTexture;
 		private static Material _previewMaterial;
 		private static Camera _cam;
@@ -45,8 +47,8 @@ namespace CameraPlus
         private Vector3 potentialPosition = Vector3.zero;
 
         private void Awake()
-		{
-			SceneManager.activeSceneChanged += SceneManagerOnActiveSceneChanged;
+        {
+            SceneManager.activeSceneChanged += SceneManagerOnActiveSceneChanged;
 			SceneManagerOnActiveSceneChanged(new Scene(), new Scene());
 			var gameObj = Instantiate(MainCamera.gameObject);
 			gameObj.SetActive(false);
@@ -84,34 +86,41 @@ namespace CameraPlus
 			_cameraCube.localScale = new Vector3(0.15f, 0.15f, 0.22f);
 			_cameraCube.name = "CameraCube";
 
-			_previewCam = Instantiate(_cam.gameObject, _cameraCube).GetComponent<Camera>();
-			
-			if (_renderTexture == null && _previewMaterial == null)
-			{
-				_renderTexture = new RenderTexture(Width, (int) (Width / _cam.aspect), 24);
-				_previewMaterial = new Material(Shader.Find("Hidden/BlitCopyWithDepth"));
-				_previewMaterial.SetTexture("_MainTex", _renderTexture);
-			}
-			
-			_previewCam.targetTexture = _renderTexture;
+            ReadIni();
 
-			var quad = GameObject.CreatePrimitive(PrimitiveType.Quad);
-			DestroyImmediate(quad.GetComponent<Collider>());
-			quad.GetComponent<MeshRenderer>().material = _previewMaterial;
-			quad.transform.parent = _cameraCube;
-			quad.transform.localPosition = new Vector3(-1f * ((_cam.aspect - 1) / 2 + 1), 0, 0.22f);
-			quad.transform.localEulerAngles = new Vector3(0, 180, 0);
-			quad.transform.localScale = new Vector3(-1 * _cam.aspect, 1, 1);
+            if (m_UsePreviewCamera)
+            {
+                _previewCam = Instantiate(_cam.gameObject, _cameraCube).GetComponent<Camera>();
 
-			ReadIni();
-		}
+                if (_renderTexture == null && _previewMaterial == null)
+                {
+                    _renderTexture = new RenderTexture(Width, (int)(Width / _cam.aspect), 24);
+                    _previewMaterial = new Material(Shader.Find("Hidden/BlitCopyWithDepth"));
+                    _previewMaterial.SetTexture("_MainTex", _renderTexture);
+                }
+
+                _previewCam.targetTexture = _renderTexture;
+
+                var quad = GameObject.CreatePrimitive(PrimitiveType.Quad);
+                DestroyImmediate(quad.GetComponent<Collider>());
+                quad.GetComponent<MeshRenderer>().material = _previewMaterial;
+                quad.transform.parent = _cameraCube;
+                quad.transform.localPosition = new Vector3(-1f * ((_cam.aspect - 1) / 2 + 1), 0, 0.22f);
+                quad.transform.localEulerAngles = new Vector3(0, 180, 0);
+                quad.transform.localScale = new Vector3(-1 * _cam.aspect, 1, 1);
+            }
+
+            if (m_MoveCameraInGame)
+            {
+                var pointer = Resources.FindObjectsOfTypeAll<VRPointer>().FirstOrDefault();
+                if (pointer == null) return;
+                ReflectionUtil.CopyComponent(pointer, typeof(CameraMoverPointer), pointer.gameObject);
+                DestroyImmediate(pointer);
+            }
+        }
 
 		private void SceneManagerOnActiveSceneChanged(Scene arg0, Scene scene)
 		{
-			var pointer = Resources.FindObjectsOfTypeAll<VRPointer>().FirstOrDefault();
-			if (pointer == null) return;
-			ReflectionUtil.CopyComponent(pointer, typeof(CameraMoverPointer), pointer.gameObject);
-			DestroyImmediate(pointer);
 		}
 
 		public void ReadIni()
@@ -120,7 +129,9 @@ namespace CameraPlus
 			PosSmooth = Convert.ToSingle(Plugin.Ini.GetValue("positionSmooth", "", "10"), CultureInfo.InvariantCulture);
 			RotSmooth = Convert.ToSingle(Plugin.Ini.GetValue("rotationSmooth", "", "5"), CultureInfo.InvariantCulture);
 
-			ThirdPerson = Convert.ToBoolean(Plugin.Ini.GetValue("thirdPerson", "", "False"), CultureInfo.InvariantCulture);
+			ThirdPerson = Convert.ToBoolean(Plugin.Ini.GetValue("thirdPerson", "", "True"), CultureInfo.InvariantCulture);
+            m_MoveCameraInGame = Convert.ToBoolean(Plugin.Ini.GetValue("moveCameraInGame", "", "True"), CultureInfo.InvariantCulture);
+            m_UsePreviewCamera = Convert.ToBoolean(Plugin.Ini.GetValue("cameraPreview", "", "True"), CultureInfo.InvariantCulture);
 
             m_3rdPersonCameraDistance = Convert.ToSingle(Plugin.Ini.GetValue("3rdPersonCameraDistance", "", "0.9"), CultureInfo.InvariantCulture);
             m_3rdPersonCameraUpperHeight = Convert.ToSingle(Plugin.Ini.GetValue("3rdPersonCameraUpperHeight", "", "1.7"), CultureInfo.InvariantCulture);

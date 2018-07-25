@@ -4,12 +4,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("CameraPlus")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Dynamic Camera by Wicked")]
+[assembly: AssemblyDescription("Dynamic Camera by Wicked")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("CameraPlus")]
-[assembly: AssemblyCopyright("Copyright © xyonico 2018")]
+[assembly: AssemblyProduct("Dynamic Camera by Wicked")]
+[assembly: AssemblyCopyright("Copyright © xyonico & wicked 2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
