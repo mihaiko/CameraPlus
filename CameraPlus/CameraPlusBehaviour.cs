@@ -122,13 +122,13 @@ namespace CameraPlus
 
 			ThirdPerson = Convert.ToBoolean(Plugin.Ini.GetValue("thirdPerson", "", "False"), CultureInfo.InvariantCulture);
 
-            m_3rdPersonCameraDistance = Convert.ToSingle(Plugin.Ini.GetValue("3rdPersonCameraDistance", "", "0.9"));
-            m_3rdPersonCameraUpperHeight = Convert.ToSingle(Plugin.Ini.GetValue("3rdPersonCameraUpperHeight", "", "1.7"));
-            m_3rdPersonCameraLowerHeight = Convert.ToSingle(Plugin.Ini.GetValue("3rdPersonCameraLowerHeight", "", "0.5"));
-            m_3rdPersonCameraLateralNear = Convert.ToSingle(Plugin.Ini.GetValue("3rdPersonCameraLateralNear", "", "0.35"));
-            m_3rdPersonCameraLateralFar = Convert.ToSingle(Plugin.Ini.GetValue("3rdPersonCameraLateralFar", "", "0.9"));
-            m_3rdPersonCameraForwardPrediction = Convert.ToSingle(Plugin.Ini.GetValue("3rdPersonCameraForwardPrediction", "", "1"));
-            m_3rdPersonCameraSpeed = Convert.ToSingle(Plugin.Ini.GetValue("3rdPersonCameraSpeed", "", "4"));
+            m_3rdPersonCameraDistance = Convert.ToSingle(Plugin.Ini.GetValue("3rdPersonCameraDistance", "", "0.9"), CultureInfo.InvariantCulture);
+            m_3rdPersonCameraUpperHeight = Convert.ToSingle(Plugin.Ini.GetValue("3rdPersonCameraUpperHeight", "", "1.7"), CultureInfo.InvariantCulture);
+            m_3rdPersonCameraLowerHeight = Convert.ToSingle(Plugin.Ini.GetValue("3rdPersonCameraLowerHeight", "", "0.5"), CultureInfo.InvariantCulture);
+            m_3rdPersonCameraLateralNear = Convert.ToSingle(Plugin.Ini.GetValue("3rdPersonCameraLateralNear", "", "0.35"), CultureInfo.InvariantCulture);
+            m_3rdPersonCameraLateralFar = Convert.ToSingle(Plugin.Ini.GetValue("3rdPersonCameraLateralFar", "", "0.9"), CultureInfo.InvariantCulture);
+            m_3rdPersonCameraForwardPrediction = Convert.ToSingle(Plugin.Ini.GetValue("3rdPersonCameraForwardPrediction", "", "1"), CultureInfo.InvariantCulture);
+            m_3rdPersonCameraSpeed = Convert.ToSingle(Plugin.Ini.GetValue("3rdPersonCameraSpeed", "", "4"), CultureInfo.InvariantCulture);
 
 			SetFOV();
 		}
