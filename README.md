@@ -17,5 +17,7 @@ Edit that file to configure the plugin:
 * **3rdPersonCameraUpperHeight, 3rdPersonCameraLowerHeight, 3rdPersonCameraLateralNear, 3rdPersonCameraLateralFar** - used to define the 8 possible camera positions  
 * **3rdPersonCameraForwardPrediction** - this value is used to predict the walls (bigger value = looks for the walls further)  
 * **3rdPersonCameraSpeed** - how fast the camera will move from one point to another
+* **moveCameraInGame** - setting this to `False` will disable the option to move the camera in game (hopefully saving some FPS)
+* **cameraPreview** - setting this to `False` will disable the in game camera preview and maybe save some FPS
 
 If you need help, ask us at the [Beat Saber Mod Group Discord Server](https://discord.gg/Cz6PTM5).
