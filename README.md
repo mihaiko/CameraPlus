@@ -30,7 +30,7 @@ Edit that file to configure the plugin:
 * `3rdPersonCameraUpperHeight`, `3rdPersonCameraLowerHeight`, `3rdPersonCameraLateralNear`, `3rdPersonCameraLateralFar` Used to define the 8 possible camera positions  
 * `3rdPersonCameraForwardPrediction` This is used to look for the walls `bigger value -> looks for the walls further`  
 * `3rdPersonCameraSpeed` How fast the camera will move when switching positions  
-* `lookAtPosX`, `lookAtPosY`,`lookAtPosZ` Define the position where the camera is looking  
+* `lookAtPosX`, `lookAtPosY`, `lookAtPosZ` Define the position where the camera is looking  
 
 While in game, you can press <kbd>F1</kbd> to toggle between first and third person.  
 
