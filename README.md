@@ -32,5 +32,5 @@ Edit that file to configure the plugin:
 
 While in game, you can press <kbd>F1</kbd> to toggle between first and third person.  
 
-Credits to @xyonico for the original [CameraPlus](https://github.com/xyonico/CameraPlus).  
+Credits to [xyonico](https://github.com/xyonico) for the original [CameraPlus](https://github.com/xyonico/CameraPlus).  
 If you need help, ask us at the [Beat Saber Mod Group Discord Server](https://discord.gg/Cz6PTM5).
