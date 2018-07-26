@@ -27,10 +27,10 @@ Edit that file to configure the plugin:
 * `cameraPreview` In game camera preview (next to the white box) `set to "False" for more FPS`  
 * `3rdPersonCameraDistance` How far back the camera should be from the avatar/player  
 * `3rdPersonCameraUpperHeight`, `3rdPersonCameraLowerHeight`, `3rdPersonCameraLateralNear`, `3rdPersonCameraLateralFar` Used to define the 8 possible camera positions  
-* `3rdPersonCameraForwardPrediction` This is used to look for the walls (bigger value -> looks for the walls further)  
-* `3rdPersonCameraSpeed` How fast the camera will move from one point to another  
+* `3rdPersonCameraForwardPrediction` This is used to look for the walls `bigger value -> looks for the walls further`  
+* `3rdPersonCameraSpeed` How fast the camera will move when switching positions  
 
 While in game, you can press <kbd>F1</kbd> to toggle between first and third person.  
 
-Credits to [xyonico](https://github.com/xyonico) for the original [CameraPlus](https://github.com/xyonico/CameraPlus)  
+Credits to @xyonico for the original [CameraPlus](https://github.com/xyonico/CameraPlus).  
 If you need help, ask us at the [Beat Saber Mod Group Discord Server](https://discord.gg/Cz6PTM5).
