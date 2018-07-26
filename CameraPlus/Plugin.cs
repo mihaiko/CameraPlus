@@ -17,7 +17,7 @@ namespace CameraPlus
 
 		public string Name => "DynamicCamera";
 
-		public string Version => "v1.2";
+		public string Version => "v1.3";
 
 		public void OnApplicationStart()
 		{
@@ -33,6 +33,7 @@ namespace CameraPlus
 				Ini.WriteValue("thirdPerson", "True");
                 Ini.WriteValue("cameraPreview", "True");
                 Ini.WriteValue("moveCameraInGame", "True");
+                Ini.WriteValue("avoidWalls", "True");
 
                 Ini.WriteValue("3rdPersonCameraDistance", "0.8");
                 Ini.WriteValue("3rdPersonCameraUpperHeight", "1.6");
@@ -41,6 +42,10 @@ namespace CameraPlus
                 Ini.WriteValue("3rdPersonCameraLateralFar", "1");
                 Ini.WriteValue("3rdPersonCameraForwardPrediction", "1");
                 Ini.WriteValue("3rdPersonCameraSpeed", "6");
+
+                Ini.WriteValue("lookAtPosX", "0");
+                Ini.WriteValue("lookAtPosY", "1");
+                Ini.WriteValue("lookAtPosZ", "10");
 
                 Ini.Save();
 			}
@@ -56,6 +61,14 @@ namespace CameraPlus
                 {
                     Ini.WriteValue("cameraPreview", "True");
                     Ini.WriteValue("moveCameraInGame", "True");
+                    needSave = true;
+                }
+                if(Ini.GetValue("avoidWalls", "", "missing") == "missing")
+                {
+                    Ini.WriteValue("avoidWalls", "True");
+                    Ini.WriteValue("lookAtPosX", "0");
+                    Ini.WriteValue("lookAtPosY", "1");
+                    Ini.WriteValue("lookAtPosZ", "10");
                     needSave = true;
                 }
 

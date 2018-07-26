@@ -23,12 +23,14 @@ Edit that file to configure the plugin:
 * `positionSmooth` How much position should smooth `SMALLER NUMBER = SMOOTHER`  
 * `rotationSmooth` How much rotation should smooth `SMALLER NUMBER = SMOOTHER`  
 * `thirdPerson` Whether third person camera is enabled  
+* `avoidWalls` Whether the camera should avoid walls or not    
 * `moveCameraInGame` Being able to move the camera in game `set to "False" for more FPS`  
 * `cameraPreview` In game camera preview (next to the white box) `set to "False" for more FPS`  
 * `3rdPersonCameraDistance` How far back the camera should be from the avatar/player  
 * `3rdPersonCameraUpperHeight`, `3rdPersonCameraLowerHeight`, `3rdPersonCameraLateralNear`, `3rdPersonCameraLateralFar` Used to define the 8 possible camera positions  
 * `3rdPersonCameraForwardPrediction` This is used to look for the walls `bigger value -> looks for the walls further`  
 * `3rdPersonCameraSpeed` How fast the camera will move when switching positions  
+* `lookAtPosX`, `lookAtPosY`,`lookAtPosZ` Define the position where the camera is looking  
 
 While in game, you can press <kbd>F1</kbd> to toggle between first and third person.  
 

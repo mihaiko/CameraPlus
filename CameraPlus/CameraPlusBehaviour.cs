@@ -25,6 +25,7 @@ namespace CameraPlus
 		}
         public static bool m_MoveCameraInGame = true;
         public static bool m_UsePreviewCamera = true;
+        public static bool m_AvoidWalls = true;
 
         private static bool _thirdPerson;
 		private static RenderTexture _renderTexture;
@@ -41,6 +42,7 @@ namespace CameraPlus
         public static float m_3rdPersonCameraLateralFar;
         public static float m_3rdPersonCameraForwardPrediction;
         public static float m_3rdPersonCameraSpeed;
+        public static Vector3 m_lookAtPos = Vector3.zero;
 
         private Vector3 currentPosition = Vector3.zero;
         private Vector3 wantedPosition = Vector3.zero;
@@ -132,6 +134,7 @@ namespace CameraPlus
 			ThirdPerson = Convert.ToBoolean(Plugin.Ini.GetValue("thirdPerson", "", "True"), CultureInfo.InvariantCulture);
             m_MoveCameraInGame = Convert.ToBoolean(Plugin.Ini.GetValue("moveCameraInGame", "", "True"), CultureInfo.InvariantCulture);
             m_UsePreviewCamera = Convert.ToBoolean(Plugin.Ini.GetValue("cameraPreview", "", "True"), CultureInfo.InvariantCulture);
+            m_AvoidWalls = Convert.ToBoolean(Plugin.Ini.GetValue("avoidWalls", "", "True"), CultureInfo.InvariantCulture);
 
             m_3rdPersonCameraDistance = Convert.ToSingle(Plugin.Ini.GetValue("3rdPersonCameraDistance", "", "0.9"), CultureInfo.InvariantCulture);
             m_3rdPersonCameraUpperHeight = Convert.ToSingle(Plugin.Ini.GetValue("3rdPersonCameraUpperHeight", "", "1.7"), CultureInfo.InvariantCulture);
@@ -141,7 +144,11 @@ namespace CameraPlus
             m_3rdPersonCameraForwardPrediction = Convert.ToSingle(Plugin.Ini.GetValue("3rdPersonCameraForwardPrediction", "", "1"), CultureInfo.InvariantCulture);
             m_3rdPersonCameraSpeed = Convert.ToSingle(Plugin.Ini.GetValue("3rdPersonCameraSpeed", "", "4"), CultureInfo.InvariantCulture);
 
-			SetFOV();
+            m_lookAtPos = new Vector3(Convert.ToSingle(Plugin.Ini.GetValue("lookAtPosX", "", "0"), CultureInfo.InvariantCulture),
+                Convert.ToSingle(Plugin.Ini.GetValue("lookAtPosY", "", "1"), CultureInfo.InvariantCulture),
+                Convert.ToSingle(Plugin.Ini.GetValue("lookAtPosZ", "", "10"), CultureInfo.InvariantCulture));
+
+            SetFOV();
 		}
 
 		private void LateUpdate()
@@ -165,79 +172,85 @@ namespace CameraPlus
 
         private void Compute3RdPersonCamera()
         {
-            Vector3 lookAtPosition = new Vector3(0f, 1f, 10f); //30 before
-
             Vector3 upperOuterRight = new Vector3(m_3rdPersonCameraLateralFar, m_3rdPersonCameraUpperHeight, -m_3rdPersonCameraDistance);
-            Vector3 upperOuterLeft = new Vector3(-m_3rdPersonCameraLateralFar, m_3rdPersonCameraUpperHeight, -m_3rdPersonCameraDistance);
-            Vector3 upperInnerRight = new Vector3(m_3rdPersonCameraLateralNear, m_3rdPersonCameraUpperHeight, -m_3rdPersonCameraDistance);
-            Vector3 upperInnerLeft = new Vector3(-m_3rdPersonCameraLateralNear, m_3rdPersonCameraUpperHeight, -m_3rdPersonCameraDistance);
-            Vector3 lowerOuterRight = new Vector3(m_3rdPersonCameraLateralFar, m_3rdPersonCameraLowerHeight, -m_3rdPersonCameraDistance);
-            Vector3 lowerOuterLeft = new Vector3(-m_3rdPersonCameraLateralFar, m_3rdPersonCameraLowerHeight, -m_3rdPersonCameraDistance);
-            Vector3 lowerInnerRight = new Vector3(m_3rdPersonCameraLateralNear, m_3rdPersonCameraLowerHeight, -m_3rdPersonCameraDistance);
-            Vector3 lowerInnerLeft = new Vector3(-m_3rdPersonCameraLateralNear, m_3rdPersonCameraLowerHeight, -m_3rdPersonCameraDistance);
 
-            //position
-            if (currentPosition == Vector3.zero)
+            if(m_AvoidWalls)
+            {
+                Vector3 upperOuterLeft = new Vector3(-m_3rdPersonCameraLateralFar, m_3rdPersonCameraUpperHeight, -m_3rdPersonCameraDistance);
+                Vector3 upperInnerRight = new Vector3(m_3rdPersonCameraLateralNear, m_3rdPersonCameraUpperHeight, -m_3rdPersonCameraDistance);
+                Vector3 upperInnerLeft = new Vector3(-m_3rdPersonCameraLateralNear, m_3rdPersonCameraUpperHeight, -m_3rdPersonCameraDistance);
+                Vector3 lowerOuterRight = new Vector3(m_3rdPersonCameraLateralFar, m_3rdPersonCameraLowerHeight, -m_3rdPersonCameraDistance);
+                Vector3 lowerOuterLeft = new Vector3(-m_3rdPersonCameraLateralFar, m_3rdPersonCameraLowerHeight, -m_3rdPersonCameraDistance);
+                Vector3 lowerInnerRight = new Vector3(m_3rdPersonCameraLateralNear, m_3rdPersonCameraLowerHeight, -m_3rdPersonCameraDistance);
+                Vector3 lowerInnerLeft = new Vector3(-m_3rdPersonCameraLateralNear, m_3rdPersonCameraLowerHeight, -m_3rdPersonCameraDistance);
+
+                //position
+                if (currentPosition == Vector3.zero)
+                {
+                    currentPosition = upperOuterRight;
+                    wantedPosition = upperOuterRight;
+                }
+
+                potentialPosition = Vector3.zero;
+
+                if (IsPointAvailable(upperOuterRight))
+                {
+                    wantedPosition = upperOuterRight;
+                }
+                else if (IsPointAvailable(upperInnerRight))
+                {
+                    wantedPosition = upperInnerRight;
+                }
+                else if (IsPointAvailable(upperOuterLeft))
+                {
+                    wantedPosition = upperOuterLeft;
+                }
+                else if (IsPointAvailable(upperInnerLeft))
+                {
+                    wantedPosition = upperInnerLeft;
+                }
+                else if (IsPointAvailable(lowerOuterRight))
+                {
+                    wantedPosition = lowerOuterRight;
+                }
+                else if (IsPointAvailable(lowerOuterLeft))
+                {
+                    wantedPosition = lowerOuterLeft;
+                }
+                else if (IsPointAvailable(lowerInnerRight))
+                {
+                    wantedPosition = lowerInnerRight;
+                }
+                else if (IsPointAvailable(lowerInnerLeft))
+                {
+                    wantedPosition = lowerInnerLeft;
+                }
+                else if (potentialPosition != Vector3.zero)
+                {
+                    wantedPosition = potentialPosition;
+                }
+
+                if (wantedPosition != currentPosition)
+                {
+                    currentPosition = GetNewPos(currentPosition, wantedPosition);
+
+                    if (Vector3.Distance(currentPosition, wantedPosition) < 0.001f)
+                    {
+                        currentPosition = wantedPosition;
+                    }
+                }
+            }
+            else
             {
                 currentPosition = upperOuterRight;
-                wantedPosition = upperOuterRight;
-            }
-
-            potentialPosition = Vector3.zero;
-
-            if (IsPointAvailable(upperOuterRight))
-            {
-                wantedPosition = upperOuterRight;
-            }
-            else if (IsPointAvailable(upperInnerRight))
-            {
-                wantedPosition = upperInnerRight;
-            }
-            else if (IsPointAvailable(upperOuterLeft))
-            {
-                wantedPosition = upperOuterLeft;
-            }
-            else if (IsPointAvailable(upperInnerLeft))
-            {
-                wantedPosition = upperInnerLeft;
-            }
-            else if (IsPointAvailable(lowerOuterRight))
-            {
-                wantedPosition = lowerOuterRight;
-            }
-            else if (IsPointAvailable(lowerOuterLeft))
-            {
-                wantedPosition = lowerOuterLeft;
-            }
-            else if (IsPointAvailable(lowerInnerRight))
-            {
-                wantedPosition = lowerInnerRight;
-            }
-            else if (IsPointAvailable(lowerInnerLeft))
-            {
-                wantedPosition = lowerInnerLeft;
-            }
-            else if (potentialPosition != Vector3.zero)
-            {
-                wantedPosition = potentialPosition;
-            }
-
-            if (wantedPosition != currentPosition)
-            {
-                currentPosition = GetNewPos(currentPosition, wantedPosition);
-
-                if (Vector3.Distance(currentPosition, wantedPosition) < 0.001f)
-                {
-                    currentPosition = wantedPosition;
-                }
             }
 
             transform.position = currentPosition;
             _cameraCube.position = currentPosition;
 
             //rotation
-            transform.LookAt(lookAtPosition);
-            _cameraCube.LookAt(lookAtPosition);
+            transform.LookAt(m_lookAtPos);
+            _cameraCube.LookAt(m_lookAtPos);
             Quaternion newRotation = Quaternion.Euler(transform.localEulerAngles.x, transform.localEulerAngles.y, 0f); //prohibit camera roll
             transform.rotation = newRotation;
             _cameraCube.rotation = newRotation;
