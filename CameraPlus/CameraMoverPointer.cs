@@ -63,14 +63,37 @@ namespace CameraPlus
 		{
 			var ini = Plugin.Ini;
 			var pos = _grabbedCamera.position;
+            Vector3 focusPoint = GetFocusPoint();
 
             CameraPlusBehaviour.m_3rdPersonCameraLateralFar  = pos.x;
             CameraPlusBehaviour.m_3rdPersonCameraUpperHeight = pos.y;
             CameraPlusBehaviour.m_3rdPersonCameraDistance    = -pos.z;
+            CameraPlusBehaviour.m_lookAtPos = focusPoint;
 
             ini.WriteValue("3rdPersonCameraLateralFar", pos.x.ToString(CultureInfo.InvariantCulture));
             ini.WriteValue("3rdPersonCameraUpperHeight", pos.y.ToString(CultureInfo.InvariantCulture));
             ini.WriteValue("3rdPersonCameraDistance", (-pos.z).ToString(CultureInfo.InvariantCulture));
+
+            ini.WriteValue("lookAtPosX", focusPoint.x.ToString(CultureInfo.InvariantCulture));
+            ini.WriteValue("lookAtPosY", focusPoint.y.ToString(CultureInfo.InvariantCulture));
+            ini.WriteValue("lookAtPosZ", focusPoint.z.ToString(CultureInfo.InvariantCulture));
+        }
+
+        private Vector3 GetFocusPoint()
+        {
+            Vector3 cameraPos = _grabbedCamera.position;
+            Vector3 cameraDir = _grabbedCamera.forward;
+
+            Vector3 tempPos = cameraPos + cameraDir;
+
+            if (Mathf.Abs(cameraDir.x) < 0.0001f) //when looking at a point parallel to the (X = 0) plane
+            {
+                return CameraPlusBehaviour.m_lookAtPos;
+            }
+
+            float cursor = -cameraPos.x / (tempPos.x - cameraPos.x);
+
+            return cameraPos + cursor * cameraDir;
         }
 	}
 }
