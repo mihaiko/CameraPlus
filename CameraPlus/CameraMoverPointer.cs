@@ -33,14 +33,22 @@ namespace CameraPlus
 					}
 				}
 
-			if (_grabbingController == null || !(_grabbingController.triggerValue <= 0.9f)) return;
+            if (_grabbingController == null || !(_grabbingController.triggerValue <= 0.9f))
+            {
+                return;
+            }
+
 			SaveToIni();
 			_grabbingController = null;
 		}
 
 		private void LateUpdate()
 		{
-			if (_grabbedCamera == null) return;
+            if (_grabbedCamera == null)
+            {
+                return;
+            }
+
 			if (_grabbingController != null)
 			{
 				var diff = _grabbingController.verticalAxisValue * Time.deltaTime;
@@ -57,6 +65,7 @@ namespace CameraPlus
             }
 
             _grabbedCamera.position = _realPos;
+            _grabbedCamera.rotation = _realRot;
         }           
 
 		private void SaveToIni()
