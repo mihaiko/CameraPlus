@@ -30,7 +30,7 @@ namespace CameraPlus
         private static bool _thirdPerson;
 		private static RenderTexture _renderTexture;
 		private static Material _previewMaterial;
-		private static Camera _cam;
+		private static Camera _cameraComp;
 		private static Camera _previewCam;
 		private static Transform _cameraCube;
 		private const int Width = 256;
@@ -52,35 +52,42 @@ namespace CameraPlus
         {
             SceneManager.activeSceneChanged += SceneManagerOnActiveSceneChanged;
 			SceneManagerOnActiveSceneChanged(new Scene(), new Scene());
-			var gameObj = Instantiate(MainCamera.gameObject);
-			gameObj.SetActive(false);
-			gameObj.name = "Camera Plus";
-			gameObj.tag = "Untagged";
-			while (gameObj.transform.childCount > 0) DestroyImmediate(gameObj.transform.GetChild(0).gameObject);
-			DestroyImmediate(gameObj.GetComponent("CameraRenderCallbacksManager"));
-			DestroyImmediate(gameObj.GetComponent("AudioListener"));
-			DestroyImmediate(gameObj.GetComponent("MeshCollider"));
+
+			GameObject newCameraObject = Instantiate(MainCamera.gameObject);
+            newCameraObject.SetActive(false);
+            newCameraObject.name = "Camera Plus";
+            newCameraObject.tag = "Untagged";
+
+            while (newCameraObject.transform.childCount > 0)
+            {
+                DestroyImmediate(newCameraObject.transform.GetChild(0).gameObject);
+            }
+
+			DestroyImmediate(newCameraObject.GetComponent("CameraRenderCallbacksManager"));
+			DestroyImmediate(newCameraObject.GetComponent("AudioListener"));
+			DestroyImmediate(newCameraObject.GetComponent("MeshCollider"));
+
 			if (SteamVRCompatibility.IsAvailable)
 			{
-				DestroyImmediate(gameObj.GetComponent(SteamVRCompatibility.SteamVRCamera));
-				DestroyImmediate(gameObj.GetComponent(SteamVRCompatibility.SteamVRFade));
+				DestroyImmediate(newCameraObject.GetComponent(SteamVRCompatibility.SteamVRCamera));
+				DestroyImmediate(newCameraObject.GetComponent(SteamVRCompatibility.SteamVRFade));
 			}
 
-			_cam = gameObj.GetComponent<Camera>();
-			_cam.stereoTargetEye = StereoTargetEyeMask.None;
-			_cam.targetTexture = null;
-			_cam.depth += 100;
+            _cameraComp = newCameraObject.GetComponent<Camera>();
+            _cameraComp.stereoTargetEye = StereoTargetEyeMask.None;
+            _cameraComp.targetTexture = null;
+            _cameraComp.depth += 100;
 
-			gameObj.SetActive(true);
+            newCameraObject.SetActive(true);
 
-			var camera = MainCamera.transform;
-			transform.position = camera.position;
-			transform.rotation = camera.rotation;
+			Transform cameraTransform = MainCamera.transform;
+			transform.position = cameraTransform.position;
+			transform.rotation = cameraTransform.rotation;
 
-			gameObj.transform.parent = transform;
-			gameObj.transform.localPosition = Vector3.zero;
-			gameObj.transform.localRotation = Quaternion.identity;
-			gameObj.transform.localScale = Vector3.one;
+            newCameraObject.transform.parent = transform;
+            newCameraObject.transform.localPosition = Vector3.zero;
+            newCameraObject.transform.localRotation = Quaternion.identity;
+            newCameraObject.transform.localScale = Vector3.one;
 
 			var cameraCube = GameObject.CreatePrimitive(PrimitiveType.Cube);
 			cameraCube.SetActive(ThirdPerson);
@@ -92,11 +99,11 @@ namespace CameraPlus
 
             if (m_UsePreviewCamera)
             {
-                _previewCam = Instantiate(_cam.gameObject, _cameraCube).GetComponent<Camera>();
+                _previewCam = Instantiate(_cameraComp.gameObject, _cameraCube).GetComponent<Camera>();
 
                 if (_renderTexture == null && _previewMaterial == null)
                 {
-                    _renderTexture = new RenderTexture(Width, (int)(Width / _cam.aspect), 24);
+                    _renderTexture = new RenderTexture(Width, (int)(Width / _cameraComp.aspect), 24);
                     _previewMaterial = new Material(Shader.Find("Hidden/BlitCopyWithDepth"));
                     _previewMaterial.SetTexture("_MainTex", _renderTexture);
                 }
@@ -107,9 +114,9 @@ namespace CameraPlus
                 DestroyImmediate(quad.GetComponent<Collider>());
                 quad.GetComponent<MeshRenderer>().material = _previewMaterial;
                 quad.transform.parent = _cameraCube;
-                quad.transform.localPosition = new Vector3(-1f * ((_cam.aspect - 1) / 2 + 1), 0, 0.22f);
+                quad.transform.localPosition = new Vector3(-1f * ((_cameraComp.aspect - 1) / 2 + 1), 0, 0.22f);
                 quad.transform.localEulerAngles = new Vector3(0, 180, 0);
-                quad.transform.localScale = new Vector3(-1 * _cam.aspect, 1, 1);
+                quad.transform.localScale = new Vector3(-1 * _cameraComp.aspect, 1, 1);
             }
 
             if (m_MoveCameraInGame)
@@ -295,11 +302,11 @@ namespace CameraPlus
 
         private void SetFOV()
 		{
-			if (_cam == null) return;
+			if (_cameraComp == null) return;
 			var fov = (float) (57.2957801818848 *
 			                   (2.0 * Mathf.Atan(Mathf.Tan((float) (FOV * (Math.PI / 180.0) * 0.5)) /
 			                                     MainCamera.aspect)));
-			_cam.fieldOfView = fov;
+            _cameraComp.fieldOfView = fov;
 			if (_previewCam == null) return;
 			_previewCam.fieldOfView = fov;
 		}

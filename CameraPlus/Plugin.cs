@@ -112,13 +112,23 @@ namespace CameraPlus
 
 		private void SceneManagerOnActiveSceneChanged(Scene arg0, Scene scene)
 		{
-			if (scene.buildIndex < 1) return;
-			if (_cameraPlus != null) Object.Destroy(_cameraPlus.gameObject);
+            if (scene.buildIndex < 1)
+            {
+                return;
+            }
+
+            if (_cameraPlus != null)
+            {
+                Object.Destroy(_cameraPlus.gameObject);
+            }
 
 			var mainCamera = Object.FindObjectsOfType<Camera>().FirstOrDefault(x => x.CompareTag("MainCamera"));
-			if (mainCamera == null) return;
+            if (mainCamera == null)
+            {
+                return;
+            }
 
-			var gameObj = new GameObject("CameraPlus");
+			GameObject gameObj = new GameObject("CameraPlus");
 			CameraPlusBehaviour.MainCamera = mainCamera;
 			_cameraPlus = gameObj.AddComponent<CameraPlusBehaviour>();
 		}
