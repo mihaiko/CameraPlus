@@ -249,7 +249,7 @@ namespace CameraPlus
             }
             else
             {
-                currentPosition = upperOuterRight;
+                wantedPosition = upperOuterRight;
             }
 
             transform.position = currentPosition;
