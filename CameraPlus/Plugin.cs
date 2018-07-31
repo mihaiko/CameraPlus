@@ -78,8 +78,8 @@ namespace CameraPlus
                 if(Ini.GetValue("useSway", "", "missing") == "missing")
                 {
                     Ini.WriteValue("useSway", "True");
-                    Ini.WriteValue("maxSway", "0.5");
-                    Ini.WriteValue("swaySpeed", "0.2");
+                    Ini.WriteValue("maxSway", "0.15");
+                    Ini.WriteValue("swaySpeed", "0.01");
                     needSave = true;
                 }
 

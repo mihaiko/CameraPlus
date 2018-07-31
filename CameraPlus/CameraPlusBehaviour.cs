@@ -162,8 +162,8 @@ namespace CameraPlus
                 Convert.ToSingle(Plugin.Ini.GetValue("lookAtPosY", "", "1"), CultureInfo.InvariantCulture),
                 Convert.ToSingle(Plugin.Ini.GetValue("lookAtPosZ", "", "10"), CultureInfo.InvariantCulture));
 
-            m_swaySpeed = Convert.ToSingle(Plugin.Ini.GetValue("swaySpeed", "", "0.2"), CultureInfo.InvariantCulture);
-            m_maxSway = Convert.ToSingle(Plugin.Ini.GetValue("maxSway", "", "0.5"), CultureInfo.InvariantCulture);
+            m_swaySpeed = Convert.ToSingle(Plugin.Ini.GetValue("swaySpeed", "", "0.01"), CultureInfo.InvariantCulture);
+            m_maxSway = Convert.ToSingle(Plugin.Ini.GetValue("maxSway", "", "0.15"), CultureInfo.InvariantCulture);
 
             SetFOV();
 		}
