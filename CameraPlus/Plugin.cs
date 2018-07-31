@@ -17,7 +17,7 @@ namespace CameraPlus
 
 		public string Name => "DynamicCamera";
 
-		public string Version => "v1.5";
+		public string Version => "v1.5.1";
 
 		public void OnApplicationStart()
 		{
