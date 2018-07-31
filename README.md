@@ -31,6 +31,9 @@ Edit that file to configure the plugin:
 * `3rdPersonCameraForwardPrediction` This is used to look for the walls `bigger value -> looks for the walls further`  
 * `3rdPersonCameraSpeed` How fast the camera will move when switching positions  
 * `lookAtPosX`, `lookAtPosY`, `lookAtPosZ` Define the position where the camera is looking  
+* `useSway` Whether the camera will sway or not  
+* `swaySpeed` How fast the camera will sway  
+* `maxSway` How far the camera can sway from the original position  
 
 While in game, you can press <kbd>F1</kbd> to toggle between first and third person.  
 
