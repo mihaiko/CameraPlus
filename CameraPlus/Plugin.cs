@@ -17,7 +17,7 @@ namespace CameraPlus
 
 		public string Name => "DynamicCamera";
 
-		public string Version => "v1.4.1";
+		public string Version => "v1.5";
 
 		public void OnApplicationStart()
 		{
@@ -47,6 +47,10 @@ namespace CameraPlus
                 Ini.WriteValue("lookAtPosY", "1");
                 Ini.WriteValue("lookAtPosZ", "10");
 
+                Ini.WriteValue("useSway", "True");
+                Ini.WriteValue("maxSway", "0.15");
+                Ini.WriteValue("swaySpeed", "0.01");
+
                 Ini.Save();
 			}
 			else
@@ -69,6 +73,13 @@ namespace CameraPlus
                     Ini.WriteValue("lookAtPosX", "0");
                     Ini.WriteValue("lookAtPosY", "1");
                     Ini.WriteValue("lookAtPosZ", "10");
+                    needSave = true;
+                }
+                if(Ini.GetValue("useSway", "", "missing") == "missing")
+                {
+                    Ini.WriteValue("useSway", "True");
+                    Ini.WriteValue("maxSway", "0.5");
+                    Ini.WriteValue("swaySpeed", "0.2");
                     needSave = true;
                 }
 

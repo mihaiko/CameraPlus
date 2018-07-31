@@ -27,6 +27,10 @@ namespace CameraPlus
         public static bool m_UsePreviewCamera = true;
         public static bool m_AvoidWalls = true;
 
+        public static bool m_UseSway = true;
+        public static float m_swaySpeed = 0.2f;
+        public static float m_maxSway = 0.5f;
+
         private static bool _thirdPerson;
 		private static RenderTexture _renderTexture;
 		private static Material _previewMaterial;
@@ -47,6 +51,8 @@ namespace CameraPlus
         private Vector3 currentPosition = Vector3.zero;
         private Vector3 wantedPosition = Vector3.zero;
         private Vector3 potentialPosition = Vector3.zero;
+        private Vector3 wantedSwayOffset = Vector3.zero;
+        private Vector3 currentSwayOffset = Vector3.zero;
 
         private void Awake()
         {
@@ -142,6 +148,7 @@ namespace CameraPlus
             m_MoveCameraInGame = Convert.ToBoolean(Plugin.Ini.GetValue("moveCameraInGame", "", "True"), CultureInfo.InvariantCulture);
             m_UsePreviewCamera = Convert.ToBoolean(Plugin.Ini.GetValue("cameraPreview", "", "True"), CultureInfo.InvariantCulture);
             m_AvoidWalls = Convert.ToBoolean(Plugin.Ini.GetValue("avoidWalls", "", "True"), CultureInfo.InvariantCulture);
+            m_UseSway = Convert.ToBoolean(Plugin.Ini.GetValue("useSway", "", "True"), CultureInfo.InvariantCulture);
 
             m_3rdPersonCameraDistance = Convert.ToSingle(Plugin.Ini.GetValue("3rdPersonCameraDistance", "", "0.9"), CultureInfo.InvariantCulture);
             m_3rdPersonCameraUpperHeight = Convert.ToSingle(Plugin.Ini.GetValue("3rdPersonCameraUpperHeight", "", "1.7"), CultureInfo.InvariantCulture);
@@ -154,6 +161,9 @@ namespace CameraPlus
             m_lookAtPos = new Vector3(Convert.ToSingle(Plugin.Ini.GetValue("lookAtPosX", "", "0"), CultureInfo.InvariantCulture),
                 Convert.ToSingle(Plugin.Ini.GetValue("lookAtPosY", "", "1"), CultureInfo.InvariantCulture),
                 Convert.ToSingle(Plugin.Ini.GetValue("lookAtPosZ", "", "10"), CultureInfo.InvariantCulture));
+
+            m_swaySpeed = Convert.ToSingle(Plugin.Ini.GetValue("swaySpeed", "", "0.2"), CultureInfo.InvariantCulture);
+            m_maxSway = Convert.ToSingle(Plugin.Ini.GetValue("maxSway", "", "0.5"), CultureInfo.InvariantCulture);
 
             SetFOV();
 		}
@@ -252,8 +262,10 @@ namespace CameraPlus
                 wantedPosition = upperOuterRight;
             }
 
-            transform.position = currentPosition;
-            _cameraCube.position = currentPosition;
+            ComputeCameraSway();
+
+            transform.position = currentPosition + currentSwayOffset;
+            _cameraCube.position = currentPosition + currentSwayOffset;
 
             //rotation
             transform.LookAt(m_lookAtPos);
@@ -261,6 +273,30 @@ namespace CameraPlus
             Quaternion newRotation = Quaternion.Euler(transform.localEulerAngles.x, transform.localEulerAngles.y, 0f); //prohibit camera roll
             transform.rotation = newRotation;
             _cameraCube.rotation = newRotation;
+        }
+
+        private void ComputeCameraSway()
+        {
+            if(!m_UseSway)
+            {
+                return;
+            }
+
+            if((wantedSwayOffset - currentSwayOffset).magnitude < 0.01f)
+            {
+                wantedSwayOffset = new Vector3(UnityEngine.Random.Range(0f, m_maxSway), UnityEngine.Random.Range(0f, m_maxSway), UnityEngine.Random.Range(0f, m_maxSway));
+            }
+
+            Vector3 direction = (wantedSwayOffset - currentSwayOffset).normalized;
+            Vector3 potentialOffset = currentSwayOffset + direction * m_swaySpeed * Time.deltaTime;
+            if((wantedSwayOffset - currentSwayOffset).magnitude < (potentialOffset - currentSwayOffset).magnitude)
+            {
+                currentSwayOffset = wantedSwayOffset;
+            }
+            else
+            {
+                currentSwayOffset = potentialOffset;
+            }
         }
 
         private bool IsPointAvailable(Vector3 position)
