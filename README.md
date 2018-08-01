@@ -4,8 +4,8 @@
 Beat Saber plugin based on the original CameraPlus.  
 
 ### Features:
-* **Switch between 1st person mode and 3rd person mode**
-  *This can be done either from the config file, or by pressing <kbd>F1</kbd> while in game
+* **Switch between 1st person mode and 3rd person mode**  
+  * This can be done either from the config file, or by pressing <kbd>F1</kbd> while in game
 
 **!! Please keep in mind that this is a replacement for the CameraPlus plugin !!**  
 **!! It will not work with both plugins installed !!**  
