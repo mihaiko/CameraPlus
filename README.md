@@ -2,10 +2,24 @@
 
 ## Description
 Beat Saber plugin based on the original CameraPlus.  
+Main feature -> **Wall avoidance**.  
 
 ### Features:
 * **Switch between 1st person mode and 3rd person mode**  
-  * This can be done either from the config file, or by pressing <kbd>F1</kbd> while in game
+  * This can be done either from the `config file`, or by pressing <kbd>F1</kbd> while in game  
+* **Smoother camera movement while in 1st person**  
+  * Perfect for `recordings`  
+* **Increased (Configurable) FoV**  
+* **Set 3rd person camera position and rotation from in game**  
+  * Just `grab` the camera with your controller and `drag` it around  
+  * This can be turned off via the config file for an `FPS boost`  
+* **In game 3rd person camera preview**  
+  * You can see what the desktop camera displays from `in game`  
+  * This can be turned off via the config file for an `FPS boost`  
+* **Wall dodging/avoiding in 3rd person camera**  
+  * The 3rd person camera will automatically avoid the in game walls  
+* **3rd person camera sway**  
+  * The 3rd person camera constantly moves in a random direction ever so slightly  
 
 **!! Please keep in mind that this is a replacement for the CameraPlus plugin !!**  
 **!! It will not work with both plugins installed !!**  
