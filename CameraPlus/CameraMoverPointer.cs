@@ -1,58 +1,74 @@
-﻿using System;
-using System.Globalization;
-using UnityEngine;
+﻿using UnityEngine;
 using VRUIControls;
 
 namespace CameraPlus
 {
-	public class CameraMoverPointer : VRPointer
+	public class CameraMoverPointer : MonoBehaviour
 	{
-		private Transform _grabbedCamera;
-		public static VRController _grabbingController;
-		private Vector3 _grabPos;
-		private Quaternion _grabRot;
-		private Vector3 _realPos;
-		private Quaternion _realRot;
-		private const float MinDistance = 0.25f;
+		protected const float MinScrollDistance = 0.25f;
+		protected const float MaxLaserDistance = 50;
 
-		public override void Update()
+		protected VRPointer _vrPointer;
+		protected CameraPlusBehaviour _cameraPlus;
+		protected Transform _cameraCube;
+		protected VRController _grabbingController;
+		protected Vector3 _grabPos;
+		protected Quaternion _grabRot;
+		protected Vector3 _realPos;
+		protected Quaternion _realRot;
+
+		public virtual void Init(CameraPlusBehaviour cameraPlus, Transform cameraCube)
 		{
-			base.Update();
-			if (vrController != null)
-				if (vrController.triggerValue > 0.9f)
+			_cameraPlus = cameraPlus;
+			_cameraCube = cameraCube;
+			_realPos = Plugin.Instance.Config.Position;
+			_realRot = Quaternion.Euler(Plugin.Instance.Config.Rotation);
+			_vrPointer = GetComponent<VRPointer>();
+		}
+
+		protected virtual void OnEnable()
+		{
+			Plugin.Instance.Config.ConfigChangedEvent += PluginOnConfigChangedEvent;
+		}
+
+		protected virtual void OnDisable()
+		{
+			Plugin.Instance.Config.ConfigChangedEvent -= PluginOnConfigChangedEvent;
+		}
+
+		protected virtual void PluginOnConfigChangedEvent(Config config)
+		{
+			_realPos = config.Position;
+			_realRot = Quaternion.Euler(config.Rotation);
+		}
+
+		protected virtual void Update()
+		{
+			if (_vrPointer.vrController != null)
+				if (_vrPointer.vrController.triggerValue > 0.9f)
 				{
 					if (_grabbingController != null) return;
-					RaycastHit hit;
-					if (Physics.Raycast(vrController.position, vrController.forward, out hit, _defaultLaserPointerLength))
+					if (Physics.Raycast(_vrPointer.vrController.position, _vrPointer.vrController.forward, out var hit, MaxLaserDistance))
 					{
-						if (hit.transform.name != "CameraCube") return;
-						_grabbedCamera = hit.transform;
-						_grabbingController = vrController;
-						_grabPos = vrController.transform.InverseTransformPoint(_grabbedCamera.position);
-						_grabRot = Quaternion.Inverse(vrController.transform.rotation) * _grabbedCamera.rotation;
+						if (hit.transform != _cameraCube) return;
+						_grabbingController = _vrPointer.vrController;
+						_grabPos = _vrPointer.vrController.transform.InverseTransformPoint(_cameraCube.position);
+						_grabRot = Quaternion.Inverse(_vrPointer.vrController.transform.rotation) * _cameraCube.rotation;
 					}
 				}
 
-            if (_grabbingController == null || !(_grabbingController.triggerValue <= 0.9f))
-            {
-                return;
-            }
-
-			SaveToIni();
+			if (_grabbingController == null || !(_grabbingController.triggerValue <= 0.9f)) return;
+			if (_grabbingController == null) return;
+			SaveToConfig();
 			_grabbingController = null;
 		}
 
-		private void LateUpdate()
+		protected virtual void LateUpdate()
 		{
-            if (_grabbedCamera == null)
-            {
-                return;
-            }
-
 			if (_grabbingController != null)
 			{
 				var diff = _grabbingController.verticalAxisValue * Time.deltaTime;
-				if (_grabPos.magnitude > MinDistance)
+				if (_grabPos.magnitude > MinScrollDistance)
 				{
 					_grabPos -= Vector3.forward * diff;
 				}
@@ -62,47 +78,31 @@ namespace CameraPlus
 				}
 				_realPos = _grabbingController.transform.TransformPoint(_grabPos);
 				_realRot = _grabbingController.transform.rotation * _grabRot;
-            }
+			}
 
-            _grabbedCamera.position = _realPos;
-            _grabbedCamera.rotation = _realRot;
-        }           
+			_cameraPlus.ThirdPersonPos = Vector3.Lerp(_cameraCube.position, _realPos,
+				Plugin.Instance.Config.positionSmooth * Time.deltaTime);
 
-		private void SaveToIni()
+			_cameraPlus.ThirdPersonRot = Quaternion.Slerp(_cameraCube.rotation, _realRot,
+				Plugin.Instance.Config.rotationSmooth * Time.deltaTime).eulerAngles;
+		}
+
+		protected virtual void SaveToConfig()
 		{
-			var ini = Plugin.Ini;
-			var pos = _grabbedCamera.position;
-            Vector3 focusPoint = GetFocusPoint();
+			var pos = _realPos;
+			var rot = _realRot.eulerAngles;
 
-            CameraPlusBehaviour.m_3rdPersonCameraLateralFar  = pos.x;
-            CameraPlusBehaviour.m_3rdPersonCameraUpperHeight = pos.y;
-            CameraPlusBehaviour.m_3rdPersonCameraDistance    = -pos.z;
-            CameraPlusBehaviour.m_lookAtPos = focusPoint;
-
-            ini.WriteValue("3rdPersonCameraLateralFar", pos.x.ToString(CultureInfo.InvariantCulture));
-            ini.WriteValue("3rdPersonCameraUpperHeight", pos.y.ToString(CultureInfo.InvariantCulture));
-            ini.WriteValue("3rdPersonCameraDistance", (-pos.z).ToString(CultureInfo.InvariantCulture));
-
-            ini.WriteValue("lookAtPosX", focusPoint.x.ToString(CultureInfo.InvariantCulture));
-            ini.WriteValue("lookAtPosY", focusPoint.y.ToString(CultureInfo.InvariantCulture));
-            ini.WriteValue("lookAtPosZ", focusPoint.z.ToString(CultureInfo.InvariantCulture));
-        }
-
-        private Vector3 GetFocusPoint()
-        {
-            Vector3 cameraPos = _grabbedCamera.position;
-            Vector3 cameraDir = _grabbedCamera.forward;
-
-            Vector3 tempPos = cameraPos + cameraDir;
-
-            if (Mathf.Abs(cameraDir.x) < 0.0001f) //when looking at a point parallel to the (X = 0) plane
-            {
-                return CameraPlusBehaviour.m_lookAtPos;
-            }
-
-            float cursor = -cameraPos.x / (tempPos.x - cameraPos.x);
-
-            return cameraPos + cursor * cameraDir;
-        }
+			var config = Plugin.Instance.Config;
+			
+			config.posx = pos.x;
+			config.posy = pos.y;
+			config.posz = pos.z;
+			
+			config.angx = rot.x;
+			config.angy = rot.y;
+			config.angz = rot.z;
+			
+			config.Save();
+		}
 	}
 }

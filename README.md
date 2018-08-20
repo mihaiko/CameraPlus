@@ -1,58 +1,40 @@
-# Dynamic Camera
+# CameraPlus
+Plugin for Beat Saber for a smoother and wider FOV camera.
 
-## Description
-Beat Saber plugin based on the original CameraPlus.  
-Main feature -> **Wall avoidance**.  
+[Video Comparison](https://youtu.be/MysLXKSXGTY)  
+[Third Person Preview](https://youtu.be/ltIhpt-n6b8)
 
-### Features:
-* **Switch between 1st person mode and 3rd person mode**  
-  * This can be done either from the `config file`, or by pressing <kbd>F1</kbd> while in game  
-* **Smoother camera movement while in 1st person**  
-  * Perfect for `recordings`  
-* **Increased (Configurable) FoV**  
-* **Set 3rd person camera position and rotation from in game**  
-  * Just `grab` the camera with your controller and `drag` it around  
-  * This can be turned off via the config file for an `FPS boost`  
-* **In game 3rd person camera preview**  
-  * You can see what the desktop camera displays from `in game`  
-  * This can be turned off via the config file for an `FPS boost`  
-* **Wall dodging/avoiding in 3rd person camera**  
-  * The 3rd person camera will automatically avoid the in game walls  
-* **3rd person camera sway**  
-  * The 3rd person camera constantly moves in a random direction ever so slightly  
+# Installing
+1. Use the mod installer: https://github.com/Umbranoxio/BeatSaberModInstaller/releases
+		It is the easiest method, it will do all these steps below in 1 click.
+	
+### To install manually:
+	1b. Make sure that Beat Saber is not running.
+	2b. Extract the contents of the zip into Beat Saber's installation folder.
+		For Oculus Home: \Oculus Apps\Software\hyperbolic-magnetism-beat-saber\
+		For Steam: \steamapps\common\Beat Saber\
+		(The folder that contains Beat Saber.exe)
+	3b. Done! You've installed the Custom Avatar Plugin.
+# Usage
+Press <kbd>F1</kbd> to toggle between first and third person.
 
-**!! Please keep in mind that this is a replacement for the CameraPlus plugin !!**  
-**!! It will not work with both plugins installed !!**  
+After you run the game once, a `cameraplus.cfg` file is created within the Beat Saber folder.  
+Edit that file to configure CameraPlus:
 
-### Watch it in action [HERE](https://www.youtube.com/watch?v=y0fMcUkKPFE)!
+`fov=90.0` Horizontal field of view of the camera  
+`fps=90.0` Frame rate of the camera  
+`antiAliasing=2` Anti-aliasing setting for the camera (1, 2, 4 or 8 only)  
+`renderScale` The resolution scale of the camera relative to game window (similar to supersampling for VR)  
+`positionSmooth=10.0` How much position should smooth **(SMALLER NUMBER = SMOOTHER)**  
+`rotationSmooth=5.0` How much rotation should smooth **(SMALLER NUMBER = SMOOTHER)**  
+`thirdPerson=false` Whether third person camera is enabled  
 
-## Installing
-1. Use the [mod installer](https://github.com/Umbranoxio/BeatSaberModInstaller/releases) to get everything setup before using this.  
-2. Download the latest `CameraPlus.dll` from the [releases](https://github.com/mihaiko/DynamicCamera/releases) page.  
-3. Copy the downloaded `CameraPlus.dll` into your BeatSaber `plugins` folder.  
+`posx=0` X position of third person camera  
+`posy=0` Y position of third person camera  
+`posz=0` Z position of third person camera  
+`angx=0` X rotation of third person camera  
+`angy=0` Y rotation of third person camera  
+`angz=0` Z rotation of third person camera  
 
-
-## Usage
-After you run the game once, a `DynamicCamera.cfg` file is created within the Beat Saber folder.  
-
-Edit that file to configure the plugin:  
-* `fov` The horizontal field of view of the camera  
-* `positionSmooth` How much position should smooth `SMALLER NUMBER = SMOOTHER`  
-* `rotationSmooth` How much rotation should smooth `SMALLER NUMBER = SMOOTHER`  
-* `thirdPerson` Whether third person camera is enabled  
-* `avoidWalls` Whether the camera should avoid walls or not    
-* `moveCameraInGame` Being able to move the camera in game `set to "False" for more FPS`  
-* `cameraPreview` In game camera preview (next to the white box) `set to "False" for more FPS`  
-* `3rdPersonCameraDistance` How far back the camera should be from the avatar/player  
-* `3rdPersonCameraUpperHeight`, `3rdPersonCameraLowerHeight`, `3rdPersonCameraLateralNear`, `3rdPersonCameraLateralFar` Used to define the 8 possible camera positions  
-* `3rdPersonCameraForwardPrediction` This is used to look for the walls `bigger value -> looks for the walls further`  
-* `3rdPersonCameraSpeed` How fast the camera will move when switching positions  
-* `lookAtPosX`, `lookAtPosY`, `lookAtPosZ` Define the position where the camera is looking  
-* `useSway` Whether the camera will sway or not  
-* `swaySpeed` How fast the camera will sway  
-* `maxSway` How far the camera can sway from the original position  
-
-While in game, you can press <kbd>F1</kbd> to toggle between first and third person.  
-
-Credits to [xyonico](https://github.com/xyonico) for the original [CameraPlus](https://github.com/xyonico/CameraPlus).  
-If you need help, ask us at the [Beat Saber Mod Group Discord Server](https://discord.gg/Cz6PTM5).
+If you need help, ask us at the Beat Saber Mod Group Discord Server:  
+https://discord.gg/BeatSaberMods
