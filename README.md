@@ -1,4 +1,4 @@
-#As someone in the Beat Saber Modding Group Discord said: "Dynamic camera is horribly outdated" - SO DON'T USE THIS!
+# As someone in the Beat Saber Modding Group Discord said: "Dynamic camera is horribly outdated" - SO DON'T USE THIS!
 
 
 # Dynamic Camera
